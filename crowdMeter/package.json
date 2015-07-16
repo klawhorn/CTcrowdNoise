@@ -1,0 +1,21 @@
+{
+  "name": "modelview-test",
+  "version": "0.0.1",
+  "description": "Testing the database sharing",
+  "dependencies": {
+    "browserify": "9.0.8",
+    "browserify-versionify": "1.0.4",
+    "firebase": "2.2.4",
+    "inherits": "2.0.1",
+    "javascript-stringify": "^1.0.1",
+    "txtify2": "^2.0.0"
+  },
+  "devDependencies": {
+    "browserify": "latest",
+    "watchify": "latest"
+  },
+  "scripts": {
+    "watch-js": "watchify index.js -o build.js -v",
+    "txtify": "browserify -t [ txtify2 -e html ] index.js > build.js"
+  }
+}
