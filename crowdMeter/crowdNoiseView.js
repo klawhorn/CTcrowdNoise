@@ -4,6 +4,10 @@ var hg = require('hyperglue2');
 var meterTemplate = require('./template.html');
 
 function CrowdNoiseView (model) {
+    if (!model) {
+        throw new Error("This view does not function without connection to a database");
+    }
+    
 	this.model = model;
     this.el = hg(meterTemplate);
 	
