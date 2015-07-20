@@ -4,15 +4,12 @@ var events = require('events');
 var inherits = require('inherits');
 var Firebase = require('firebase');
 
-
 var clicks = new Firebase('https://crowdpractice.firebaseio.com/clicks');
 
 //trying to get the events added, having the CrowdNoise inherit the ability to add eventEmmitter
-inherits(CrowdNoise
-, events.EventEmitter);
+inherits(CrowdNoise, events.EventEmitter);
 
 function CrowdNoise () {
-	var self=this;
 	//setting the database for the model
 	this.database = clicks;
 	
@@ -20,19 +17,19 @@ function CrowdNoise () {
 	this.clickCount = 0;
 	
 	//binding methods
-	this.update = this.update.bind(this);
-	this._onupdate = this._onupdate.bind(this);
+	this.watchDatabase = this.watchDatabase.bind(this);
+	this.onUpdate = this.onUpdate.bind(this);
 	this.increase = this.increase.bind(this);
-	this.decrement = this.decrement.bind(this);
+	this.decrease = this.decrease.bind(this);
 
-	//running the update function so that the db has a change event listener
-	this.update();
+	//running the watchDatabase function so that the db has a change event listener
+	this.watchDatabase();
 
-	//attaching event listeners to set up the update event.
+	//attaching event listeners 
 	events.EventEmitter.call(this);
 }
 
-CrowdNoise.prototype.decrement = function () {
+CrowdNoise.prototype.decrease = function () {
 	var self= this;
 	setTimeout( function () {
 		self.database.transaction( function(cv){
@@ -41,9 +38,9 @@ CrowdNoise.prototype.decrement = function () {
 	}, 5000);
 }
 
-CrowdNoise.prototype.update = function () {
+CrowdNoise.prototype.watchDatabase = function () {
 	//this should be watching the db for the change in the clicks property
-	this.database.on("value", this._onupdate);
+	this.database.on("value", this.onUpdate);
 }
 
 CrowdNoise.prototype.increase = function () {
@@ -53,7 +50,7 @@ CrowdNoise.prototype.increase = function () {
 	});
 }
 
-CrowdNoise.prototype._onupdate = function (snapshot) {
+CrowdNoise.prototype.onUpdate = function (snapshot) {
 	//when a value event comes through from a db change...
 	var data = snapshot.val(); 
 
@@ -63,4 +60,6 @@ CrowdNoise.prototype._onupdate = function (snapshot) {
 	//emit an update
 	this.emit('update');
 }
+
+
 
