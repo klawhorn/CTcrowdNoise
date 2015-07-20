@@ -8,14 +8,12 @@
     "firebase": "2.2.4",
     "inherits": "2.0.1",
     "javascript-stringify": "^1.0.1",
-    "txtify2": "^2.0.0"
-  },
-  "devDependencies": {
-    "browserify": "latest",
-    "watchify": "latest"
+    "txtify2": "^2.0.0",
+    "hyperglue2": "1.6.2"
   },
   "scripts": {
-    "watch-js": "watchify index.js -o build.js -v",
-    "txtify": "browserify -t [ txtify2 -e html ] index.js > build.js"
+    "txtify": "browserify -t [ txtify2 -e html ] index.js > build.js",
+    "button-start": "open crowdButton/index.html",
+    "meter-start": "open crowdMeter/index.html"
   }
 }

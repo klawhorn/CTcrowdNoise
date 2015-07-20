@@ -1,4 +1,4 @@
-var CrowdNoise = require('./model.js');
+var CrowdNoise = require('../model.js');
 var CrowdNoiseView = require('./crowdNoiseView.js');
 
 var crowdNoise = new CrowdNoise;
