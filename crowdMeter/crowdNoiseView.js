@@ -1,10 +1,15 @@
 module.exports = CrowdNoiseView;
 
-var CrowdNoise = require('./model.js');
+var hg = require('hyperglue2');
+var meterTemplate = require('./template.html');
 
 function CrowdNoiseView (model) {
 	this.model = model;
+    this.el = hg(meterTemplate);
 	
+    var viewCont = document.querySelector('#maindiv');
+    viewCont.appendChild(this.el);
+
 	//binding the prototype methods to the Constructor
 	this.render = this.render.bind(this); 
 	this.watchforChange = this.watchforChange.bind(this);

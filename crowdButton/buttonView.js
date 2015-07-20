@@ -1,25 +1,28 @@
 module.exports = ButtonView;
 
-var buttonTemplate = require('./template.html');
 var hg = require('hyperglue2');
+var buttonTemplate = require('./template.html');
 
 function ButtonView (model) {
 	this.model = model;
 	this.el = hg(buttonTemplate);
 
-	this.initialize = this.initialize.bind(this);
-	this._onclick = this._onclick.bind(this);
+	var buttonCont = document.querySelector('#button-container');
+	buttonCont.appendChild(this.el);
 
-	this.initialize();
+	this.buttonListener = this.buttonListener.bind(this);
+	this.onclick = this.onclick.bind(this);
+
+	this.buttonListener();
 }
 
-ButtonView.prototype.initialize = function () {
+ButtonView.prototype.buttonListener = function () {
 	//working event listener
-	document.getElementById("addButton").addEventListener('click', this._onclick);
+	document.getElementById("addButton").addEventListener('click', this.onclick);
 }
 
-ButtonView.prototype._onclick = function () {
+ButtonView.prototype.onclick = function () {
 	//What to do when the button is clicked, working.
 	this.model.increase();
-	this.model.decrement();
+	this.model.decrease();
 }

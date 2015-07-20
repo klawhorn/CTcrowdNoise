@@ -1,55 +1,85 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = ButtonView;
+module.exports = CrowdNoiseView;
 
 var hg = require('hyperglue2');
-var buttonTemplate = require('./template.html');
+var meterTemplate = require('./template.html');
 
-function ButtonView (model) {
+function CrowdNoiseView (model) {
 	this.model = model;
-	this.el = hg(buttonTemplate);
+    this.el = hg(meterTemplate);
+	
+    var viewCont = document.querySelector('#maindiv');
+    viewCont.appendChild(this.el);
 
-	var buttonCont = document.querySelector('#button-container');
-	buttonCont.appendChild(this.el);
+	//binding the prototype methods to the Constructor
+	this.render = this.render.bind(this); 
+	this.watchforChange = this.watchforChange.bind(this);
+	this.changeSpeed = this.changeSpeed.bind(this);
 
-	this.buttonListener = this.buttonListener.bind(this);
-	this.onclick = this.onclick.bind(this);
-
-	this.buttonListener();
+	this.watchforChange();
+	this.changeSpeed();
 }
 
-ButtonView.prototype.buttonListener = function () {
-	//working event listener
-	document.getElementById("addButton").addEventListener('click', this.onclick);
+CrowdNoiseView.prototype.render = function () {
+	//add the event listener through the initalize method
+	this.changeSpeed();
 }
 
-ButtonView.prototype.onclick = function () {
-	//What to do when the button is clicked, working.
-	this.model.increase();
-	this.model.decrease();
+CrowdNoiseView.prototype.watchforChange = function () {
+	//watching for the update event from the model
+	this.model.on('update', this.render);
 }
+
+CrowdNoiseView.prototype.changeSpeed = function () {
+	var clicks = this.model.clickCount;
+    var animationElement = document.querySelector('#container-gradient')
+    if (clicks < 1) {
+        animationElement.style.animationDuration = 5 + 's';
+        // this.model.decrement();
+    } else if (clicks < 3) {
+        animationElement.style.animationDuration = 2 + 's';
+        // this.model.decrement();
+    } else if (clicks < 5) {
+        animationElement.style.animationDuration = 500 + 'ms';
+        // this.model.decrement();
+    } else if (clicks < 7) {
+        animationElement.style.animationDuration = 10 + 'ms';
+        // this.model.decrement();
+    } else {
+       animationElement.style.animationDuration = 1 + 'ms';
+       // this.model.decrement();
+    }
+}
+
+
+
+
+	
+
+
+
 },{"./template.html":9,"hyperglue2":6}],2:[function(require,module,exports){
 var CrowdNoise = require('./model.js');
-var ButtonView = require('./buttonView.js');
+var CrowdNoiseView = require('./crowdNoiseView.js');
 
-var crowdNoise = new CrowdNoise();
-var buttonView = new ButtonView(crowdNoise);
-
-
-
-
-},{"./buttonView.js":1,"./model.js":3}],3:[function(require,module,exports){
+var crowdNoise = new CrowdNoise;
+var crowdNoiseView = new CrowdNoiseView(crowdNoise);
+},{"./crowdNoiseView.js":1,"./model.js":3}],3:[function(require,module,exports){
 module.exports = CrowdNoise;
 
 var events = require('events');
 var inherits = require('inherits');
 var Firebase = require('firebase');
 
+
 var clicks = new Firebase('https://crowdpractice.firebaseio.com/clicks');
 
 //trying to get the events added, having the CrowdNoise inherit the ability to add eventEmmitter
-inherits(CrowdNoise, events.EventEmitter);
+inherits(CrowdNoise
+, events.EventEmitter);
 
 function CrowdNoise () {
+	var self=this;
 	//setting the database for the model
 	this.database = clicks;
 	
@@ -57,19 +87,19 @@ function CrowdNoise () {
 	this.clickCount = 0;
 	
 	//binding methods
-	this.watchDatabase = this.watchDatabase.bind(this);
-	this.onUpdate = this.onUpdate.bind(this);
+	this.update = this.update.bind(this);
+	this._onupdate = this._onupdate.bind(this);
 	this.increase = this.increase.bind(this);
-	this.decrease = this.decrease.bind(this);
+	this.decrement = this.decrement.bind(this);
 
-	//running the watchDatabase function so that the db has a change event listener
-	this.watchDatabase();
+	//running the update function so that the db has a change event listener
+	this.update();
 
-	//attaching event listeners 
+	//attaching event listeners to set up the update event.
 	events.EventEmitter.call(this);
 }
 
-CrowdNoise.prototype.decrease = function () {
+CrowdNoise.prototype.decrement = function () {
 	var self= this;
 	setTimeout( function () {
 		self.database.transaction( function(cv){
@@ -78,9 +108,9 @@ CrowdNoise.prototype.decrease = function () {
 	}, 5000);
 }
 
-CrowdNoise.prototype.watchDatabase = function () {
+CrowdNoise.prototype.update = function () {
 	//this should be watching the db for the change in the clicks property
-	this.database.on("value", this.onUpdate);
+	this.database.on("value", this._onupdate);
 }
 
 CrowdNoise.prototype.increase = function () {
@@ -90,7 +120,7 @@ CrowdNoise.prototype.increase = function () {
 	});
 }
 
-CrowdNoise.prototype.onUpdate = function (snapshot) {
+CrowdNoise.prototype._onupdate = function (snapshot) {
 	//when a value event comes through from a db change...
 	var data = snapshot.val(); 
 
@@ -982,5 +1012,5 @@ if (typeof Object.create === 'function') {
 }
 
 },{}],9:[function(require,module,exports){
-module.exports = "<div>\n<button id=\"addButton\">Add one!</button>\n</div>";
+module.exports = "<div id=\"container-gradient\">\n\t<div id=\"box-cover\"></div>\n</div>";
 },{}]},{},[2]);
