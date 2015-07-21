@@ -1,10 +1,19 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports={
+	"firebaseUrl": "https://crowdpractice.firebaseio.com/clicks",
+	"timeout": "5000"
+}
+},{}],2:[function(require,module,exports){
 module.exports = ButtonView;
 
 var hg = require('hyperglue2');
 var buttonTemplate = require('./template.html');
 
 function ButtonView (model) {
+	if (!model) {
+		throw new Error("This view does not function without connection to a database");
+	}
+	
 	this.model = model;
 	this.el = hg(buttonTemplate);
 
@@ -27,24 +36,91 @@ ButtonView.prototype.onclick = function () {
 	this.model.increase();
 	this.model.decrease();
 }
-},{"./template.html":9,"hyperglue2":6}],2:[function(require,module,exports){
+},{"./template.html":3,"hyperglue2":10}],3:[function(require,module,exports){
+module.exports = "<div>\n<button id=\"addButton\">Add one!</button>\n</div>";
+},{}],4:[function(require,module,exports){
+module.exports = CrowdNoiseView;
+
+var hg = require('hyperglue2');
+var meterTemplate = require('./template.html');
+
+function CrowdNoiseView (model) {
+    if (!model) {
+        throw new Error("This view does not function without connection to a database");
+    }
+    
+	this.model = model;
+    this.el = hg(meterTemplate);
+	
+    var viewCont = document.querySelector('#maindiv');
+    viewCont.appendChild(this.el);
+
+	//binding the prototype methods to the Constructor
+	this.render = this.render.bind(this); 
+	this.watchforChange = this.watchforChange.bind(this);
+	this.changeSpeed = this.changeSpeed.bind(this);
+
+	this.watchforChange();
+	this.changeSpeed();
+}
+
+CrowdNoiseView.prototype.render = function () {
+	//add the event listener through the initalize method
+	this.changeSpeed();
+}
+
+CrowdNoiseView.prototype.watchforChange = function () {
+	//watching for the update event from the model
+	this.model.on('update', this.render);
+}
+
+CrowdNoiseView.prototype.changeSpeed = function () {
+	var clicks = this.model.clickCount;
+    var animationElement = document.querySelector('#container-gradient')
+    if (clicks < 1) {
+        animationElement.style.animationDuration = 5 + 's';
+        // this.model.decrement();
+    } else if (clicks < 3) {
+        animationElement.style.animationDuration = 2 + 's';
+        // this.model.decrement();
+    } else if (clicks < 5) {
+        animationElement.style.animationDuration = 500 + 'ms';
+        // this.model.decrement();
+    } else if (clicks < 7) {
+        animationElement.style.animationDuration = 10 + 'ms';
+        // this.model.decrement();
+    } else {
+       animationElement.style.animationDuration = 1 + 'ms';
+       // this.model.decrement();
+    }
+}
+
+
+
+
+	
+
+
+
+},{"./template.html":5,"hyperglue2":10}],5:[function(require,module,exports){
+module.exports = "<div id=\"container-gradient\">\n\t<div id=\"box-cover\"></div>\n</div>";
+},{}],6:[function(require,module,exports){
 var CrowdNoise = require('./model.js');
-var ButtonView = require('./buttonView.js');
+var ButtonView = require('./crowdButton/buttonView.js');
+var CrowdNoiseView = require('./crowdMeter/crowdNoiseView.js');
 
-var crowdNoise = new CrowdNoise();
+var crowdNoise = new CrowdNoise;
 var buttonView = new ButtonView(crowdNoise);
-
-
-
-
-},{"./buttonView.js":1,"./model.js":3}],3:[function(require,module,exports){
+var crowdNoiseView = new CrowdNoiseView(crowdNoise);
+},{"./crowdButton/buttonView.js":2,"./crowdMeter/crowdNoiseView.js":4,"./model.js":7}],7:[function(require,module,exports){
 module.exports = CrowdNoise;
 
 var events = require('events');
 var inherits = require('inherits');
 var Firebase = require('firebase');
+var config = require('./config.json');
 
-var clicks = new Firebase('https://crowdpractice.firebaseio.com/clicks');
+var clicks = new Firebase(config.firebaseUrl);
 
 //trying to get the events added, having the CrowdNoise inherit the ability to add eventEmmitter
 inherits(CrowdNoise, events.EventEmitter);
@@ -75,7 +151,7 @@ CrowdNoise.prototype.decrease = function () {
 		self.database.transaction( function(cv){
 			return cv - 1;
 		})
-	}, 5000);
+	}, config.timeout);
 }
 
 CrowdNoise.prototype.watchDatabase = function () {
@@ -102,7 +178,9 @@ CrowdNoise.prototype.onUpdate = function (snapshot) {
 }
 
 
-},{"events":4,"firebase":5,"inherits":8}],4:[function(require,module,exports){
+
+
+},{"./config.json":1,"events":8,"firebase":9,"inherits":12}],8:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -405,7 +483,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],5:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*! @license Firebase v2.2.4
     License: https://www.firebase.com/terms/terms-of-service.html */
 (function() {var h,aa=this;function n(a){return void 0!==a}function ba(){}function ca(a){a.ub=function(){return a.tf?a.tf:a.tf=new a}}
@@ -671,7 +749,7 @@ function Nc(a,b){J(!b||!0===a||!1===a,"Can't turn on custom loggers persistently
 
 module.exports = Firebase;
 
-},{}],6:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var domify = require('domify');
 
 module.exports = hyperglue;
@@ -846,7 +924,7 @@ function hyperglue(el, data, opts) {
   return el;
 };
 
-},{"domify":7}],7:[function(require,module,exports){
+},{"domify":11}],11:[function(require,module,exports){
 
 /**
  * Expose `parse`.
@@ -956,7 +1034,7 @@ function parse(html, doc) {
   return fragment;
 }
 
-},{}],8:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -981,6 +1059,4 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],9:[function(require,module,exports){
-module.exports = "<div>\n<button id=\"addButton\">Add one!</button>\n</div>";
-},{}]},{},[2]);
+},{}]},{},[6]);

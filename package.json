@@ -13,7 +13,6 @@
   },
   "scripts": {
     "txtify": "browserify -t [ txtify2 -e html ] index.js > build.js",
-    "button-start": "open crowdButton/index.html",
-    "meter-start": "open crowdMeter/index.html"
+    "start": "open index.html"
   }
 }

@@ -8,8 +8,8 @@ To use:
 
 2. Run "npm install" to install the necessary dependencies
 
-3. To see the button, run "npm run button-start" in your terminal to open a button in your browser.
+3. Run "npm run start" to see the button and view in action!
 
-4. To see the meter, run "npm run meter-start" in your terminal to open crowd noise meter in your browser.
+To change the database in firebase or the duration length of the data persistence, you can change the values in the local config file.
 
-To change the database in firebase, the animation speed, or the duration length of the data persistence, you can change the values in the local config file.
+** If you make any changes to the files, you can run "npm run txtify" in your terminal to output a new build.js script that will reflect your changes **

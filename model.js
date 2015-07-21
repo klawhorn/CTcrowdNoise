@@ -3,9 +3,9 @@ module.exports = CrowdNoise;
 var events = require('events');
 var inherits = require('inherits');
 var Firebase = require('firebase');
-var config = require('./config.js');
+var config = require('./config.json');
 
-var clicks = new Firebase(config.firebase_url);
+var clicks = new Firebase(config.firebaseUrl);
 
 //trying to get the events added, having the CrowdNoise inherit the ability to add eventEmmitter
 inherits(CrowdNoise, events.EventEmitter);
