@@ -5,7 +5,7 @@ var inherits = require('inherits');
 var Firebase = require('firebase');
 var config = require('./config.json');
 
-var clicks = new Firebase(config.firebaseUrl);
+var clicks = new Firebase(config.FIREBASE_URL);
 
 //trying to get the events added, having the CrowdNoise inherit the ability to add eventEmmitter
 inherits(CrowdNoise, events.EventEmitter);
@@ -36,7 +36,7 @@ CrowdNoise.prototype.decrease = function () {
 		self.database.transaction( function(cv){
 			return cv - 1;
 		})
-	}, config.timeout);
+	}, config.TIMEOUT);
 }
 
 CrowdNoise.prototype.watchDatabase = function () {

@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
-	"firebaseUrl": "https://crowdpractice.firebaseio.com/clicks",
-	"timeout": "5000"
+	"FIREBASE_URL": "https://crowdpractice.firebaseio.com/clicks",
+	"TIMEOUT": "5000"
 }
 },{}],2:[function(require,module,exports){
 module.exports = ButtonView;
@@ -37,7 +37,7 @@ ButtonView.prototype.onclick = function () {
 	this.model.decrease();
 }
 },{"./template.html":3,"hyperglue2":10}],3:[function(require,module,exports){
-module.exports = "<div>\n<button id=\"addButton\">Add one!</button>\n</div>";
+module.exports = "<div>\n<input id=\"addButton\" class=\"pulse animated\" type=\"image\" alt=\"approval button\" src=\"./img/heart2.svg\"></input>\n</div>";
 },{}],4:[function(require,module,exports){
 module.exports = CrowdNoiseView;
 
@@ -75,25 +75,27 @@ CrowdNoiseView.prototype.watchforChange = function () {
 }
 
 CrowdNoiseView.prototype.changeSpeed = function () {
-	var clicks = this.model.clickCount;
-    var animationElement = document.querySelector('#container-gradient')
+    var clicks = this.model.clickCount;
+    var animationElement = document.querySelector('#img')
     if (clicks < 1) {
-        animationElement.style.animationDuration = 5 + 's';
-        // this.model.decrement();
+        animationElement.style.animationDuration = 3 + 's';        
     } else if (clicks < 3) {
-        animationElement.style.animationDuration = 2 + 's';
-        // this.model.decrement();
+        animationElement.style.animationDuration = 2 + 's';        
     } else if (clicks < 5) {
-        animationElement.style.animationDuration = 500 + 'ms';
-        // this.model.decrement();
+        animationElement.style.animationDuration = 1 + 's';    
     } else if (clicks < 7) {
-        animationElement.style.animationDuration = 10 + 'ms';
-        // this.model.decrement();
+        animationElement.style.animationDuration = 500 + 'ms';
+    } else if (clicks < 10) {
+        animationElement.style.animationDuration = 250 + 'ms';
+    } else if (clicks < 13) {
+        animationElement.style.animationDuration = 125 + 'ms';
+    } else if (clicks < 15) {
+        animationElement.style.animationDuration = 75 + 'ms';
     } else {
-       animationElement.style.animationDuration = 1 + 'ms';
-       // this.model.decrement();
+       animationElement.style.animationDuration = 40 + 'ms';
     }
 }
+
 
 
 
@@ -103,7 +105,7 @@ CrowdNoiseView.prototype.changeSpeed = function () {
 
 
 },{"./template.html":5,"hyperglue2":10}],5:[function(require,module,exports){
-module.exports = "<div id=\"container-gradient\">\n\t<div id=\"box-cover\"></div>\n</div>";
+module.exports = "<div>\n<input id=\"img\" type=\"image\" alt=\"heart of approval\" src=\"./img/heart2.svg\"></input>\n</div>";
 },{}],6:[function(require,module,exports){
 var CrowdNoise = require('./model.js');
 var ButtonView = require('./crowdButton/buttonView.js');
@@ -120,7 +122,7 @@ var inherits = require('inherits');
 var Firebase = require('firebase');
 var config = require('./config.json');
 
-var clicks = new Firebase(config.firebaseUrl);
+var clicks = new Firebase(config.FIREBASE_URL);
 
 //trying to get the events added, having the CrowdNoise inherit the ability to add eventEmmitter
 inherits(CrowdNoise, events.EventEmitter);
@@ -151,7 +153,7 @@ CrowdNoise.prototype.decrease = function () {
 		self.database.transaction( function(cv){
 			return cv - 1;
 		})
-	}, config.timeout);
+	}, config.TIMEOUT);
 }
 
 CrowdNoise.prototype.watchDatabase = function () {

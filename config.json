@@ -1,4 +1,4 @@
 {
-	"firebaseUrl": "https://crowdpractice.firebaseio.com/clicks",
-	"timeout": "5000"
+	"FIREBASE_URL": "https://crowdpractice.firebaseio.com/clicks",
+	"TIMEOUT": "5000"
 }

@@ -1,40 +1,48 @@
-html, body {
-    background-color: gray;
-    width: 350px;
-    height: 360px;
+html {
+  background-color: #333333;
+}
 
+#addButton {
+  width: 25%;
+  height: 25%;
+  
+  border-radius: 25px;
+  border: 5px solid black;
+  
+  display: block;
+  margin: 10% auto 0 auto;
+
+  outline: none;
+  background-color: #E85D87;
+
+  webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+#img {
+  width: 25%;
+  height: 25%;
+  
+  border-radius: 25px;
+  border: 5px solid black;
+  
+  display: block;
+  margin: 10% auto 0 auto;
+
+  webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+   
+  animation-name: example;
+  animation-duration: 3s;
+  animation-iteration-count:infinite;
+  animation-direction: alternate;
 }
 
 @keyframes example {
-    from {background-color: black;}
-    to {background-color: orange;}
-}
-
-#container-gradient {
-    width: 350px;
-   height: 360px;
-   animation-name: example;
-   animation-duration: 5s;
-   animation-iteration-count:infinite;
-   animation-direction: alternate;
-   border-radius: 25px;
-}
-
-
-#box-cover {
-    background-image: url('img/clap.svg');
-    background-repeat: no-repeat;
-    background-image: fill;
-    background-image-height: 360px;
-    background-image-width: 350px;
-    background-image-padding-top: 150px;
-    height: 360px;
-    width: 350px;
-    padding: 10px;
-    z-index: 10;
-    top: 0;
-    left: 0;
-    position: absolute;
+    from {background-color: #E85D87;}
+    to {background-color: #831A3A;}
 }
 
 

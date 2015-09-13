@@ -34,25 +34,27 @@ CrowdNoiseView.prototype.watchforChange = function () {
 }
 
 CrowdNoiseView.prototype.changeSpeed = function () {
-	var clicks = this.model.clickCount;
-    var animationElement = document.querySelector('#container-gradient')
+    var clicks = this.model.clickCount;
+    var animationElement = document.querySelector('#img')
     if (clicks < 1) {
-        animationElement.style.animationDuration = 5 + 's';
-        // this.model.decrement();
+        animationElement.style.animationDuration = 3 + 's';        
     } else if (clicks < 3) {
-        animationElement.style.animationDuration = 2 + 's';
-        // this.model.decrement();
+        animationElement.style.animationDuration = 2 + 's';        
     } else if (clicks < 5) {
-        animationElement.style.animationDuration = 500 + 'ms';
-        // this.model.decrement();
+        animationElement.style.animationDuration = 1 + 's';    
     } else if (clicks < 7) {
-        animationElement.style.animationDuration = 10 + 'ms';
-        // this.model.decrement();
+        animationElement.style.animationDuration = 500 + 'ms';
+    } else if (clicks < 10) {
+        animationElement.style.animationDuration = 250 + 'ms';
+    } else if (clicks < 13) {
+        animationElement.style.animationDuration = 125 + 'ms';
+    } else if (clicks < 15) {
+        animationElement.style.animationDuration = 75 + 'ms';
     } else {
-       animationElement.style.animationDuration = 1 + 'ms';
-       // this.model.decrement();
+       animationElement.style.animationDuration = 40 + 'ms';
     }
 }
+
 
 
 
